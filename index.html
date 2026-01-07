@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanel Style - Infinite Motion</title>
+    <style>
+        /* --- 1. GRUNDGERÜST & SCHRIFT --- */
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;500&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #050505;
+            color: #fff;
+            font-family: 'Oswald', sans-serif;
+            overflow: hidden; /* Alles fest, nur der Slider bewegt sich */
+        }
+
+        /* --- 2. HINTERGRUND --- */
+        .bg-slider {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            filter: brightness(0.3) grayscale(100%);
+        }
+
+        .bg-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transform: scale(1);
+            transition: opacity 2s ease, transform 10s ease;
+        }
+
+        .bg-slide.active {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* --- 3. HERO TEXT --- */
+        .hero {
+            height: 55vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-left: 5vw;
+        }
+
+        .reveal-text h1 {
+            font-size: 5rem;
+            text-transform: uppercase;
+            line-height: 1;
+            margin: 0;
+            animation: slideUp 1s ease-out forwards;
+            opacity: 0; /* Start unsichtbar */
+        }
+        
+        .reveal-text h1.delay { animation-delay: 0.2s; }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* --- 4. INFINITE MARQUEE SLIDER (Das Laufband) --- */
+        .marquee-container {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 45vh; /* Unterer Bereich */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(to top, #000 0%, transparent 100%); /* Leichter Schatten unten */
+        }
+
+        .marquee-track {
+            display: flex;
+            gap: 20px; /* Abstand zwischen Karten */
+            /* Die Animation: */
+            animation: scroll 20s linear infinite;
+            width: max-content; /* Wichtig: Breite passt sich Inhalt an */
+        }
+        
+        /* Stoppt die Bewegung, wenn Maus drauf ist */
+        .marquee-container:hover .marquee-track {
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } /* Bewegt sich um die Hälfte (da wir den Inhalt verdoppelt haben) */
+        }
+
+        /* Die Karten Styles */
+        .card {
+            width: 350px;
+            height: 220px;
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            position: relative;
+            flex-shrink: 0; /* Verhindert das Schrumpfen */
+            cursor: pointer;
+            transition: transform 0.3s ease, border-color 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            border-color: #fff;
+            z-index: 10;
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover img { opacity: 1; }
+
+        .card-info {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: #000;
+            padding: 5px 10px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="bg-slider">
+        <div class="bg-slide active" style="background-image: url('https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');"></div>
+        <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');"></div>
+        <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');"></div>
+    </div>
+
+    <div class="hero">
+        <div class="reveal-text"><h1>Creative</h1></div>
+        <div class="reveal-text"><h1 class="delay">Developer <span style="color:#666;">// Portfolio</span></h1></div>
+    </div>
+
+    <div class="marquee-container">
+        <div class="marquee-track">
+            <div class="card"><img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"><div class="card-info">01 Brand</div></div>
+            <div class="card"><img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"><div class="card-info">02 Tech</div></div>
+            <div class="card"><img src="https://images.unsplash.com/photo-1459749411177-287ce35e8b4f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"><div class="card-info">03 Style</div></div>
+            <div class="card"><img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"><div class="card-info">04 Code</div></div>
+            <div class="card"><img src="https://images.unsplash.com/photo-1558655146-d09347e0b7a8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"><div class="card-info">05 Art</div></div>
+
+            <div class="card"><img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"><div class="card-info">01 Brand</div></div>
+            <div class="card"><img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"><div class="card-info">02 Tech</div></div>
+            <div class="card"><img src="https://images.unsplash.com/photo-1459749411177-287ce35e8b4f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"><div class="card-info">03 Style</div></div>
+            <div class="card"><img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"><div class="card-info">04 Code</div></div>
+            <div class="card"><img src="https://images.unsplash.com/photo-1558655146-d09347e0b7a8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"><div class="card-info">05 Art</div></div>
+        </div>
+    </div>
+
+    <script>
+        // BACKGROUND LOOP (Bleibt gleich)
+        const slides = document.querySelectorAll('.bg-slide');
+        let currentSlide = 0;
+        setInterval(() => {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }, 5000);
+    </script>
+</body>
+</html>
