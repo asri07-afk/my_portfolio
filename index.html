@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sanel Style - Infinite Motion</title>
+    <title>Sanel Style - Infinite Motion + Dialog</title>
     <style>
         /* --- 1. GRUNDGERÜST & SCHRIFT --- */
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;500&display=swap');
@@ -16,7 +16,7 @@
             background-color: #050505;
             color: #fff;
             font-family: 'Oswald', sans-serif;
-            overflow: hidden; /* Alles fest, nur der Slider bewegt sich */
+            overflow: hidden; 
         }
 
         /* --- 2. HINTERGRUND --- */
@@ -63,7 +63,7 @@
             line-height: 1;
             margin: 0;
             animation: slideUp 1s ease-out forwards;
-            opacity: 0; /* Start unsichtbar */
+            opacity: 0;
         }
         
         .reveal-text h1.delay { animation-delay: 0.2s; }
@@ -73,44 +73,42 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
-        /* --- 4. INFINITE MARQUEE SLIDER (Das Laufband) --- */
+        /* --- 4. INFINITE MARQUEE SLIDER --- */
         .marquee-container {
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 45vh; /* Unterer Bereich */
+            height: 45vh;
             overflow: hidden;
             display: flex;
             align-items: center;
-            background: linear-gradient(to top, #000 0%, transparent 100%); /* Leichter Schatten unten */
+            background: linear-gradient(to top, #000 0%, transparent 100%);
         }
 
         .marquee-track {
             display: flex;
-            gap: 20px; /* Abstand zwischen Karten */
-            /* Die Animation: */
+            gap: 20px;
             animation: scroll 20s linear infinite;
-            width: max-content; /* Wichtig: Breite passt sich Inhalt an */
+            width: max-content;
         }
         
-        /* Stoppt die Bewegung, wenn Maus drauf ist */
+        /* WICHTIG: Animation pausieren, damit man klicken kann */
         .marquee-container:hover .marquee-track {
             animation-play-state: paused;
         }
 
         @keyframes scroll {
             0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); } /* Bewegt sich um die Hälfte (da wir den Inhalt verdoppelt haben) */
+            100% { transform: translateX(-50%); } 
         }
 
-        /* Die Karten Styles */
         .card {
             width: 350px;
             height: 220px;
             background-color: #1a1a1a;
             border: 1px solid #333;
             position: relative;
-            flex-shrink: 0; /* Verhindert das Schrumpfen */
+            flex-shrink: 0;
             cursor: pointer;
             transition: transform 0.3s ease, border-color 0.3s;
         }
@@ -127,6 +125,7 @@
             object-fit: cover;
             opacity: 0.6;
             transition: opacity 0.3s;
+            pointer-events: none; /* Bild stört Klick nicht */
         }
 
         .card:hover img { opacity: 1; }
@@ -139,10 +138,117 @@
             padding: 5px 10px;
             text-transform: uppercase;
             font-size: 0.9rem;
+            pointer-events: none;
+        }
+
+        /* --- 5. NEU: DIALOG / MODAL STYLES --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px); /* Macht den Hintergrund unscharf */
+            z-index: 999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: #111;
+            border: 1px solid #444;
+            width: 80%;
+            max-width: 600px;
+            padding: 40px;
+            position: relative;
+            transform: translateY(50px);
+            transition: transform 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.3s;
+        }
+        .close-btn:hover { color: #fff; }
+
+        .modal-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            color: #fff;
+        }
+
+        .modal-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #ccc;
+            font-weight: 300;
+        }
+
+        /* --- 6. TOP NAVIGATION --- */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            right: 0;
+            padding: 30px;
+            z-index: 1000; /* Ganz oben */
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 10px 20px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        /* Gast Button deaktiviert (sieht inaktiv aus) */
+        .nav-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none; /* Klick nicht möglich */
+            border-color: #444;
         }
 
     </style>
 </head>
+
+<nav class="top-nav">
+    <a href="#" class="nav-btn disabled">Gast Login</a>
+    
+    <a href="dashboard.html" target="_blank" class="nav-btn">Admin Dashboard</a>
+</nav>
 <body>
 
     <div class="bg-slider">
@@ -158,22 +264,64 @@
 
     <div class="marquee-container">
         <div class="marquee-track">
-            <div class="card"><img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"><div class="card-info">01 Brand</div></div>
-            <div class="card"><img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"><div class="card-info">02 Tech</div></div>
-            <div class="card"><img src="https://images.unsplash.com/photo-1459749411177-287ce35e8b4f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"><div class="card-info">03 Style</div></div>
-            <div class="card"><img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"><div class="card-info">04 Code</div></div>
-            <div class="card"><img src="https://images.unsplash.com/photo-1558655146-d09347e0b7a8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"><div class="card-info">05 Art</div></div>
+            <div class="card" data-title="01 Brand Identity" data-description="Hier steht die Beschreibung für Branding. Wir entwickeln Logos, Farben und Strategien für Marken.">
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80">
+                <div class="card-info">01 Brand</div>
+            </div>
 
-            <div class="card"><img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"><div class="card-info">01 Brand</div></div>
-            <div class="card"><img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"><div class="card-info">02 Tech</div></div>
-            <div class="card"><img src="https://images.unsplash.com/photo-1459749411177-287ce35e8b4f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"><div class="card-info">03 Style</div></div>
-            <div class="card"><img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"><div class="card-info">04 Code</div></div>
-            <div class="card"><img src="https://images.unsplash.com/photo-1558655146-d09347e0b7a8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"><div class="card-info">05 Art</div></div>
+            <div class="card" data-title="02 Modern Tech" data-description="Technologie ist der Kern. Wir nutzen React, Vue und modernste Web-Standards für Performance.">
+                <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80">
+                <div class="card-info">02 Tech</div>
+            </div>
+
+            <div class="card" data-title="03 Visual Style" data-description="Design ist nicht nur wie es aussieht, sondern wie es funktioniert. CSS Animationen und Layouts.">
+                <img src="https://images.unsplash.com/photo-1459749411177-287ce35e8b4f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80">
+                <div class="card-info">03 Style</div>
+            </div>
+
+            <div class="card" data-title="04 Clean Code" data-description="Sauberer Code ist wartbar und skalierbar. Wir achten auf Best Practices und Struktur.">
+                <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80">
+                <div class="card-info">04 Code</div>
+            </div>
+
+            <div class="card" data-title="05 Digital Art" data-description="Kreative Konzepte treffen auf digitale Umsetzung. Kunst im Browser.">
+                <img src="https://images.unsplash.com/photo-1558655146-d09347e0b7a8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80">
+                <div class="card-info">05 Art</div>
+            </div>
+
+            <div class="card" data-title="01 Brand Identity" data-description="Hier steht die Beschreibung für Branding. Wir entwickeln Logos, Farben und Strategien für Marken.">
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80">
+                <div class="card-info">01 Brand</div>
+            </div>
+            <div class="card" data-title="02 Modern Tech" data-description="Technologie ist der Kern. Wir nutzen React, Vue und modernste Web-Standards für Performance.">
+                <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80">
+                <div class="card-info">02 Tech</div>
+            </div>
+            <div class="card" data-title="03 Visual Style" data-description="Design ist nicht nur wie es aussieht, sondern wie es funktioniert. CSS Animationen und Layouts.">
+                <img src="https://images.unsplash.com/photo-1459749411177-287ce35e8b4f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80">
+                <div class="card-info">03 Style</div>
+            </div>
+            <div class="card" data-title="04 Clean Code" data-description="Sauberer Code ist wartbar und skalierbar. Wir achten auf Best Practices und Struktur.">
+                <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80">
+                <div class="card-info">04 Code</div>
+            </div>
+            <div class="card" data-title="05 Digital Art" data-description="Kreative Konzepte treffen auf digitale Umsetzung. Kunst im Browser.">
+                <img src="https://images.unsplash.com/photo-1558655146-d09347e0b7a8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80">
+                <div class="card-info">05 Art</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <span class="close-btn" id="closeBtn">&times;</span>
+            <h2 class="modal-title" id="modalTitle">Titel Platzhalter</h2>
+            <p class="modal-text" id="modalDesc">Hier kommt der Text hin.</p>
         </div>
     </div>
 
     <script>
-        // BACKGROUND LOOP (Bleibt gleich)
+        // 1. BACKGROUND LOOP (Wie vorher)
         const slides = document.querySelectorAll('.bg-slide');
         let currentSlide = 0;
         setInterval(() => {
@@ -181,6 +329,42 @@
             currentSlide = (currentSlide + 1) % slides.length;
             slides[currentSlide].classList.add('active');
         }, 5000);
+
+        // 2. MODAL LOGIC (Neu)
+        const modal = document.getElementById('modalOverlay');
+        const closeBtn = document.getElementById('closeBtn');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDesc = document.getElementById('modalDesc');
+        const cards = document.querySelectorAll('.card');
+
+        // Funktion: Öffne Modal
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                // Hole Daten aus dem geklickten Element
+                const title = card.getAttribute('data-title');
+                const desc = card.getAttribute('data-description');
+
+                // Fülle Modal mit Daten
+                modalTitle.innerText = title;
+                modalDesc.innerText = desc;
+
+                // Zeige Modal an
+                modal.classList.add('active');
+            });
+        });
+
+        // Funktion: Schließe Modal (Klick auf X)
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        // Funktion: Schließe Modal (Klick auf Hintergrund)
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
     </script>
 </body>
 </html>

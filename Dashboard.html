@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanel Style - Admin Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;500&family=Inter:wght@300;400;600&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #050505;
+            color: #fff;
+            font-family: 'Inter', sans-serif; /* Inter ist besser für Lesbarkeit im Dashboard */
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 250px;
+            background: #111;
+            border-right: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .logo {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .menu-item {
+            padding: 15px;
+            color: #888;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background: #222;
+            color: #fff;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        h1 {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 300;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+        }
+
+        /* --- STATS CARDS --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: #111;
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* --- ACTION SECTION --- */
+        .action-section {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #333;
+        }
+
+        .btn-grid {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            padding: 15px 30px;
+            background: #fff;
+            color: #000;
+            border: none;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+            flex: 1;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            background: #ddd;
+        }
+
+        .action-btn.video {
+            background: transparent;
+            border: 1px solid #fff;
+            color: #fff;
+        }
+        .action-btn.video:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        /* --- MODAL / DIALOG --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        
+        .modal-overlay.active { display: flex; }
+
+        .dashboard-modal {
+            background: #151515;
+            width: 500px;
+            padding: 40px;
+            border: 1px solid #444;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: #222;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 5px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #fff;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #fff;
+            color: #000;
+            border: none;
+            text-transform: uppercase;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo">Sanel // Admin</div>
+        <div class="menu-item active">Dashboard Übersicht</div>
+        <div class="menu-item">Termine</div>
+        <div class="menu-item">Kunden</div>
+        <div class="menu-item">Rechnungen</div>
+        <div class="menu-item" style="margin-top: auto;">Logout</div>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h1>Willkommen zurück, Boss.</h1>
+            <p style="color:#888;">Hier ist der aktuelle Status deiner Agentur.</p>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Offene Anfragen</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">€ 4.2k</div>
+                <div class="stat-label">Umsatz diesen Monat</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">5</div>
+                <div class="stat-label">Anstehende Shootings</div>
+            </div>
+        </div>
+
+        <div class="action-section">
+            <h2 style="font-family:'Oswald'; margin-top:0;">Neuen Auftrag anlegen</h2>
+            <p style="color:#aaa; margin-bottom: 20px;">Wähle eine Kategorie, um einen Termin manuell einzutragen.</p>
+            
+            <div class="btn-grid">
+                <button class="action-btn" onclick="openBooking('Photoshooting')">Photoshooting buchen</button>
+                <button class="action-btn video" onclick="openBooking('Videodrehung')">Videodreh buchen</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="bookingModal">
+        <div class="dashboard-modal">
+            <span class="close-modal" onclick="closeBooking()">&times;</span>
+            <h2 style="font-family:'Oswald'; margin-top:0;" id="modalTitle">Termin Buchen</h2>
+            
+            <form>
+                <div class="form-group">
+                    <label>Kundenname</label>
+                    <input type="text" placeholder="z.B. Max Mustermann">
+                </div>
+                
+                <div class="form-group">
+                    <label>Datum</label>
+                    <input type="date">
+                </div>
+
+                <div class="form-group">
+                    <label>Projekt Details</label>
+                    <textarea rows="3" placeholder="Was genau wird gemacht?"></textarea>
+                </div>
+
+                <input type="hidden" id="bookingType">
+
+                <button type="button" class="submit-btn" onclick="alert('Termin gespeichert!')">Termin Eintragen</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('bookingModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const typeInput = document.getElementById('bookingType');
+
+        function openBooking(type) {
+            // Setzt den Titel je nachdem welchen Button man gedrückt hat
+            modalTitle.innerText = "Neues " + type;
+            typeInput.value = type; 
+            
+            // Zeigt Modal
+            modal.classList.add('active');
+        }
+
+        function closeBooking() {
+            modal.classList.remove('active');
+        }
+
+        // Schließen wenn man daneben klickt
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeBooking();
+            }
+        }
+    </script>
+
+</body>
+</html>
